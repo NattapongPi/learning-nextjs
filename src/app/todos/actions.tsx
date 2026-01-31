@@ -1,7 +1,7 @@
 "use server";
 
 import { Todo } from "@/types/todo";
-import { revalidateTag, updateTag } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 
 const url = process.env.API_URL;
 export async function createTodoActions(
@@ -28,7 +28,8 @@ export async function createTodoActions(
   });
   if (response.ok) {
     await revalidateTag("todos", "max");
-    updateTag("todos");
+    await updateTag("todos");
+    await revalidatePath("/todos");
     return {
       success: true,
       message: "Todo added successfully",
@@ -53,7 +54,8 @@ export async function toggleTodo(prevState: { message: string }, todo: Todo) {
 
   if (response.ok) {
     await revalidateTag("todos", "max");
-    updateTag("todos");
+    await updateTag("todos");
+    await revalidatePath("/todos");
     return {
       success: true,
       message: "Todo toggled successfully",
@@ -71,7 +73,8 @@ export async function deleteTodo(prevState: { message: string }, id: string) {
   });
   if (response.ok) {
     await revalidateTag("todos", "max");
-    updateTag("todos");
+    await updateTag("todos");
+    await revalidatePath("/todos");
     return {
       success: true,
       message: "Todo deleted successfully",
