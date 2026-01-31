@@ -1,23 +1,14 @@
 import BlogsList from "@/components/BlogsList";
 import BlogForm from "@/components/BlogForm";
-import { BlogResponse } from "@/types/blog";
 
-const url = process.env.API_URL;
-
-async function fetchData(url: string): Promise<BlogResponse | undefined> {
-  if (!url) return;
-  const response = await fetch(url, {
-    next: {
-      tags: ["blogs"],
-    },
-  });
-  const data = await response.json();
-  return data;
-}
+export const dynamic = "force-dynamic";
+export const revalidate = 300;
 
 export default async function BlogsPage() {
-  const blogs = (await fetchData(`${url}/blogs`)) || [];
-
+  const response = await fetch(`${process.env.API_URL}/blogs`, {
+    next: { tags: ["blogs"] },
+  });
+  const blogs = await response.json();
   return (
     <>
       <div className="w-1/2 mx-auto">
