@@ -3,8 +3,14 @@
 import { useActionState, useEffect } from "react";
 import { createBlog } from "@/app/blogs/actions";
 
+type FormState = {
+  success: boolean;
+  message: string;
+  timestamp: number;
+};
+
 export default function BlogForm() {
-  const initState = {
+  const initState: FormState = {
     success: false,
     message: "",
     timestamp: 0,
