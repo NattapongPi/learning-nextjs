@@ -2,7 +2,7 @@ import BlogsList from "@/components/BlogsList";
 import BlogForm from "@/components/BlogForm";
 import { BlogResponse } from "@/types/blog";
 
-const url = process.env.NEXT_PUBLIC_API_URL;
+const url = process.env.API_URL;
 
 async function fetchData(url: string): Promise<BlogResponse | undefined> {
   if (!url) return;
