@@ -1,6 +1,6 @@
 "use server";
 
-import { Todo } from "@/types/blog";
+import { Todo } from "@/types/todo";
 
 const url = process.env.API_URL;
 export async function createTodoActions(

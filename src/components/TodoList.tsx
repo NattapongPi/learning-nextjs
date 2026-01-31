@@ -1,5 +1,5 @@
 "use client";
-import { Todo } from "@/types/blog";
+import { Todo } from "@/types/todo";
 import { toggleTodo, deleteTodo } from "@/app/todos/actions";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
