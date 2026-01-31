@@ -1,6 +1,7 @@
 "use server";
 
 import { Todo } from "@/types/todo";
+import { updateTag } from "next/cache";
 
 const url = process.env.API_URL;
 export async function createTodoActions(
@@ -26,6 +27,7 @@ export async function createTodoActions(
     },
   });
   if (response.ok) {
+    updateTag("todos");
     return {
       success: true,
       message: "Todo added successfully",
@@ -49,6 +51,7 @@ export async function toggleTodo(prevState: { message: string }, todo: Todo) {
   });
 
   if (response.ok) {
+    updateTag("todos");
     return {
       success: true,
       message: "Todo toggled successfully",
@@ -65,6 +68,7 @@ export async function deleteTodo(prevState: { message: string }, id: string) {
     method: "DELETE",
   });
   if (response.ok) {
+    updateTag("todos");
     return {
       success: true,
       message: "Todo deleted successfully",
