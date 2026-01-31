@@ -1,13 +1,12 @@
 "use client";
 import { createTodoActions } from "@/app/todos/actions";
-import { useRouter } from "next/navigation";
+import { useTransition } from "react";
 export default function AddTodo() {
-  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const onSubmitTodo = async (formData: FormData): Promise<void> => {
-    const result = await createTodoActions({ message: "" }, formData);
-    if (result?.success) {
-      router.refresh();
-    }
+    startTransition(async () => {
+      await createTodoActions({ message: "" }, formData);
+    });
   };
   return (
     <>
@@ -18,8 +17,11 @@ export default function AddTodo() {
             name="todo"
             className="border border-gray-300 rounded px-4 py-2"
           />
-          <button className="bg-sky-500 text-white px-4 py-2 rounded hover:bg-sky-600 transition-colors cursor-pointer ml-4">
-            Add Todo
+          <button
+            className="bg-sky-500 text-white px-4 py-2 rounded hover:bg-sky-600 transition-colors cursor-pointer ml-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isPending}
+          >
+            {isPending ? "Adding..." : "Add Todo"}
           </button>
         </form>
       </div>

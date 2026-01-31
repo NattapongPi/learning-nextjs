@@ -1,20 +1,23 @@
 "use client";
 import { Todo } from "@/types/todo";
 import { toggleTodo, deleteTodo } from "@/app/todos/actions";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 export default function TodoList({ todos }: { todos: Todo[] }) {
   const [filter, setFilter] = useState("all");
+  const [isPending, startTransition] = useTransition();
   const callToggleTodo = async (todo: Todo) => {
-    const response = await toggleTodo({ message: "" }, todo);
-    if (response.success) {
-    }
+    startTransition(async () => {
+      await toggleTodo({ message: "" }, todo);
+    });
   };
   const callDeleteTodo = async (id: string) => {
-    const response = await deleteTodo({ message: "" }, id);
-    if (response.success) {
-      alert(response.message);
-    }
+    startTransition(async () => {
+      const response = await deleteTodo({ message: "" }, id);
+      if (response.success) {
+        alert(response.message);
+      }
+    });
   };
   return (
     <>
@@ -45,10 +48,11 @@ export default function TodoList({ todos }: { todos: Todo[] }) {
               </div>
               <div>
                 <button
-                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors cursor-pointer"
+                  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isPending}
                   onClick={() => callDeleteTodo(todo.id)}
                 >
-                  delete
+                  {isPending ? "Deleting..." : "delete"}
                 </button>
               </div>
             </li>
