@@ -1,6 +1,8 @@
 import TodoList from "@/components/TodoList";
 import AddTodo from "@/components/AddTodo";
 
+export const dynamic = "force-dynamic";
+
 export default async function TodosPage() {
   const url = process.env.API_URL;
   const todos = await fetch(`${url}/todos`);
