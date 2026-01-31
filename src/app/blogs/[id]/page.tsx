@@ -1,5 +1,6 @@
 "use server";
 import DeleteBlog from "@/components/DeleteBlog";
+import { redirect } from "next/navigation";
 async function fetchData(url: string) {
   if (!url) return;
   const response = await fetch(url);
@@ -16,6 +17,9 @@ export default async function BlogIdPage({
 }) {
   const currentParams = await params;
   const blog = await fetchData(`${url}/blogs/${currentParams.id}`);
+  if (!blog || !blog.id) {
+    redirect("/blogs");
+  }
 
   return (
     <>

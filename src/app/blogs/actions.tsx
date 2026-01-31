@@ -57,5 +57,8 @@ export const deleteBlog = async (
   }
   await fetch(`${url}/blogs/${id}`, { method: "DELETE" });
   revalidateTag("blogs", "max");
-  redirect("/blogs");
+  return {
+    success: true,
+    message: "Blog deleted successfully",
+  };
 };
