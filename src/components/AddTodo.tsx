@@ -3,7 +3,7 @@ import { createTodoActions } from "@/app/todos/actions";
 import { useRouter } from "next/navigation";
 export default function AddTodo() {
   const router = useRouter();
-  const onSubmitTodo = async (formData: FormData) => {
+  const onSubmitTodo = async (formData: FormData): Promise<void> => {
     const result = await createTodoActions({ message: "" }, formData);
     if (result?.success) {
       router.refresh();

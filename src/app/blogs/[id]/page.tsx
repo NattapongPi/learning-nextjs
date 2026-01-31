@@ -1,7 +1,9 @@
 "use server";
 import DeleteBlog from "@/components/DeleteBlog";
 import { redirect } from "next/navigation";
-async function fetchData(url: string) {
+import { Blog } from "@/types/blog";
+
+async function fetchData(url: string): Promise<Blog | undefined> {
   if (!url) return;
   const response = await fetch(url);
   const data = await response.json();
@@ -16,7 +18,9 @@ export default async function BlogIdPage({
   params: Promise<{ id: string }>;
 }) {
   const currentParams = await params;
-  const blog = await fetchData(`${url}/blogs/${currentParams.id}`);
+  const blog: Blog | undefined = await fetchData(
+    `${url}/blogs/${currentParams.id}`
+  );
   if (!blog || !blog.id) {
     redirect("/blogs");
   }
