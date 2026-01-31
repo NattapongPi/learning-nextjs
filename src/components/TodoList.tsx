@@ -1,23 +1,19 @@
 "use client";
 import { Todo } from "@/types/todo";
 import { toggleTodo, deleteTodo } from "@/app/todos/actions";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function TodoList({ todos }: { todos: Todo[] }) {
   const [filter, setFilter] = useState("all");
-  const router = useRouter();
   const callToggleTodo = async (todo: Todo) => {
     const response = await toggleTodo({ message: "" }, todo);
     if (response.success) {
-      router.refresh();
     }
   };
   const callDeleteTodo = async (id: string) => {
     const response = await deleteTodo({ message: "" }, id);
     if (response.success) {
       alert(response.message);
-      router.refresh();
     }
   };
   return (
