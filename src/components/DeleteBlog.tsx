@@ -1,11 +1,9 @@
 "use client";
 import { useTransition } from "react";
 import { deleteBlog } from "@/app/blogs/actions";
-import { useRouter } from "next/navigation";
 export default function DeleteBlog({ id }: { id: string }) {
   const [isPending, startTransition] = useTransition();
 
-  const router = useRouter();
   const onSubmit = async (formData: FormData) => {
     startTransition(async () => {
       const result = await deleteBlog(
@@ -15,8 +13,6 @@ export default function DeleteBlog({ id }: { id: string }) {
 
       if (result?.success) {
         alert(result.message);
-        router.push("/blogs");
-        router.refresh();
       } else {
         alert(result?.message);
       }
