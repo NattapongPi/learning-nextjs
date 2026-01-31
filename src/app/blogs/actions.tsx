@@ -1,6 +1,8 @@
 "use server";
+import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 const url = process.env.API_URL;
-export default async function createBlog(
+export async function createBlog(
   _prevState: { message: string },
   formData: FormData
 ) {
@@ -24,22 +26,36 @@ export default async function createBlog(
       },
     });
     if (response.ok) {
+      revalidateTag("blogs", "max");
       return {
         success: true,
         message: "Blog created successfully",
-        timestamp: Date.now(),
       };
     }
     return {
       success: false,
       message: `Blog created failed: ${response.statusText}`,
-      timestamp: Date.now(),
     };
   } catch (error: unknown) {
     return {
       success: false,
       message: `Blog created failed: ${error}`,
-      timestamp: Date.now(),
     };
   }
 }
+
+export const deleteBlog = async (
+  _prevState: { success: boolean; message: string },
+  formData: FormData
+) => {
+  const id = formData.get("id");
+  if (!id) {
+    return {
+      success: false,
+      message: "Blog ID is required",
+    };
+  }
+  await fetch(`${url}/blogs/${id}`, { method: "DELETE" });
+  revalidateTag("blogs", "max");
+  redirect("/blogs");
+};
