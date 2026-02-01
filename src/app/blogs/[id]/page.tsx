@@ -5,7 +5,7 @@ import { Blog } from "@/types/blog";
 
 async function fetchData(url: string): Promise<Blog | undefined> {
   if (!url) return;
-  const response = await fetch(url);
+  const response = await fetch(url, { next: { tags: ["blogs"] } });
   const data = await response.json();
   return data;
 }
