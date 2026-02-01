@@ -14,6 +14,7 @@ export default function DeleteBlog({ id }: { id: string }) {
 
       if (result?.success) {
         alert(result.message);
+        router.refresh();
         router.push("/blogs");
       } else {
         alert(result?.message);
