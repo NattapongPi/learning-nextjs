@@ -3,10 +3,11 @@ import BlogForm from "@/components/BlogForm";
 import { BlogResponse } from "@/types/blog";
 
 export default async function BlogsPage() {
+  let blogs: BlogResponse = [];
   const response = await fetch(`${process.env.API_URL}/blogs`, {
     next: { tags: ["blogs"] },
   });
-  const blogs: BlogResponse = await response.json();
+  blogs = await response.json();
   return (
     <>
       <div className="w-1/2 mx-auto">
