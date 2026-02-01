@@ -1,5 +1,5 @@
 "use server";
-import { updateTag } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag } from "next/cache";
 const url = process.env.API_URL;
 export async function createBlog(
   _prevState: { message: string },
@@ -56,6 +56,8 @@ export const deleteBlog = async (
   }
   await fetch(`${url}/blogs/${id}`, { method: "DELETE" });
   updateTag("blogs");
+  revalidateTag("blogs", "max");
+  revalidatePath("/blogs");
   return {
     success: true,
     message: "Blog deleted successfully",
