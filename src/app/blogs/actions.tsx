@@ -1,5 +1,6 @@
 "use server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag, updateTag } from "next/cache";
+import { redirect } from "next/navigation";
 const url = process.env.API_URL;
 export async function createBlog(
   _prevState: { message: string },
@@ -25,7 +26,9 @@ export async function createBlog(
       },
     });
     if (response.ok) {
-      revalidatePath("/blogs");
+      await updateTag("blogs");
+      await revalidateTag("blogs", "max");
+      await revalidatePath("/blogs");
       return {
         success: true,
         message: "Blog created successfully",
@@ -55,8 +58,13 @@ export const deleteBlog = async (
     };
   }
   await fetch(`${url}/blogs/${id}`, { method: "DELETE" });
-  revalidatePath("/blogs");
-  revalidatePath(`/blogs/${id}`);
+
+  await updateTag("blogs");
+  await revalidateTag("blogs", "max");
+  await revalidatePath("/blogs");
+  await revalidatePath(`/blogs/${id}`);
+
+  redirect("/blogs");
   return {
     success: true,
     message: "Blog deleted successfully",
