@@ -1,5 +1,5 @@
 "use server";
-import { revalidatePath, revalidateTag, updateTag } from "next/cache";
+import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 const url = process.env.API_URL;
 export async function createBlog(
@@ -26,8 +26,6 @@ export async function createBlog(
       },
     });
     if (response.ok) {
-      await updateTag("blogs");
-      await revalidateTag("blogs", "max");
       await revalidatePath("/blogs");
       return {
         success: true,
@@ -58,8 +56,6 @@ export const deleteBlog = async (
     };
   }
   await fetch(`${url}/blogs/${id}`, { method: "DELETE" });
-  await updateTag("blogs");
-  await revalidateTag("blogs", "max");
   await revalidatePath("/blogs");
   redirect("/blogs");
   return {
