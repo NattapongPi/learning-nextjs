@@ -27,8 +27,6 @@ export async function createBlog(
     });
     if (response.ok) {
       await updateTag("blogs");
-      // await revalidateTag("blogs", "max");
-      // await revalidatePath("/blogs");
       return {
         success: true,
         message: "Blog created successfully",
@@ -57,16 +55,14 @@ export const deleteBlog = async (
       message: "Blog ID is required",
     };
   }
-  await fetch(`${url}/blogs/${id}`, { method: "DELETE" });
-
-  await updateTag("blogs");
-  // await revalidateTag("blogs", "max");
-  // await revalidatePath("/blogs");
-  // await revalidatePath(`/blogs/${id}`);
-
-  redirect("/blogs");
-  return {
-    success: true,
-    message: "Blog deleted successfully",
-  };
+  try {
+    await fetch(`${url}/blogs/${id}`, { method: "DELETE" });
+    await updateTag("blogs");
+    redirect("/blogs");
+  } catch (error) {
+    return {
+      success: false,
+      message: `Blog deleted failed: ${error}`,
+    };
+  }
 };
