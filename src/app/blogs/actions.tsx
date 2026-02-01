@@ -26,6 +26,8 @@ export async function createBlog(
     });
     if (response.ok) {
       updateTag("blogs");
+      revalidateTag("blogs", "max");
+      revalidatePath("/blogs");
       return {
         success: true,
         message: "Blog created successfully",
